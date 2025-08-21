@@ -23,7 +23,7 @@ const register = async (req, res) => {
   const user = await User.findOne({email});
 
   if (user) {
-    res.status(422).json({ errors: ["Por favor, utilize outro e-mail."] });
+    res.status(422).json({ error: ["Por favor, utilize outro e-mail."] });
     return;
   }
 
@@ -41,7 +41,7 @@ const register = async (req, res) => {
   //If user was created seccessfully, return the token
   if (!newUser) {
     res.status(422).json({
-      errors: ["Houve um erro, por favor tente novamente mais tarde."],
+      error: ["Houve um erro, por favor tente novamente mais tarde."],
     });
     return;
   }
@@ -60,13 +60,13 @@ const login = async (req, res) => {
 
   //Check if user exists 
   if(!user) {
-    res.status(404).json({errors: ["Usuário não encontrado."]})
+    res.status(404).json({error: ["Usuário não encontrado."]})
     return
   }
 
   // Check if password matches
-  if(!(await bcrypt.compare(password, user.password))) {
-    res.status(422).json({errors: ["Senha inválida."]})
+  if(!( await bcrypt.compare(password, user.password))) {
+    res.status(422).json({error: ["Senha inválida."]})
     return
   }
 
@@ -136,14 +136,14 @@ try {
 
   // Check if user exists
   if(!user){
-    res.status(404).json({ errors: ["Usuário não encontrado! (A)"]});
+    res.status(404).json({ error: ["Usuário não encontrado!"]});
     return;
   }
 
   res.status(200).json(user);
 
 } catch (error) {
-  res.status(502).json({ errors: ["Uauário não encontrado (B)!"]})
+  res.status(502).json({ error: ["Usuário não encontrado!"]})
   return;
 }
 
@@ -159,14 +159,14 @@ const deleteUser = async (req, res) => {
 
     // Check if user existis
     if(!user){
-      res.status(404).json({ errors: ["Usuário não encontrado!"]});
+      res.status(404).json({ error: ["Usuário não encontrado!"]});
       return;
     }
 
     // Check if user is the same as the one tryimg to delete the account
     if(!user._id.equals(reqUser._id)) {
       res.status(422).json({
-        errors: ["Você não pode deletar este usuário!"]
+        error: ["Você não pode deletar este usuário!"]
       });
       return;
     }
@@ -180,7 +180,7 @@ const deleteUser = async (req, res) => {
     res.status(200).json({id: user._id, message:`Usuário ${user.email} deletado com sucesso!`});
 
   } catch (error) {
-    res.status(404).json({ errors: ["Usuário não encontrado!"]});
+    res.status(404).json({ error: ["Usuário não encontrado!"]});
     return;
   } 
 };
@@ -195,7 +195,7 @@ const getAllUsers = async (req, res) => {
     }
     res.status(200).json(users);    
   } catch(error){
-    res.status(500).json({errors: ["Ocorreu um erro, tente novamente mais tarde!"]});
+    res.status(500).json({error: ["Ocorreu um erro, tente novamente mais tarde!"]});
   }
 }
 

@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 // Redux
 import { register, reset } from "../../slices/authSlice";
 
+
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const dispatch = useDispatch();
+
   const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
@@ -30,10 +32,6 @@ const Register = () => {
       confirmPassword,
     };
 
-    if(password !== confirmPassword) {
-      console.log("As senha não coincidem!")
-      return;
-    }
     console.log(user);
     dispatch(register(user));
   };
@@ -54,32 +52,32 @@ const Register = () => {
           type="text"
           placeholder="Nome"
           onChange={(e) => setName(e.target.value)}
-          value={name || ""}
+          value={name || ""} autoComplete="username"
         />
         <input
           type="email"
           placeholder="E-mail"
           onChange={(e) => setEmail(e.target.value)}
-          value={email || ""}
+          value={email || ""} autoComplete="username"
         />
         <input
           type="password"
           placeholder="Senha"
           onChange={(e) => setPassword(e.target.value)}
-          value={password || ""}
+          value={password || ""} autoComplete="new-password"
         />
         <input
           type="password"
           placeholder="Confirme sua senha!"
           onChange={(e) => setConfirmPassword(e.target.value)}
-          value={confirmPassword || ""}
+          value={confirmPassword || ""} autoComplete="new-password"
         />
-        {!loading && <input type="submit" value="Cadastrar" />} 
-        {loading &&<input type="submit" value="Aguarde..." />}
-        {error && <Message msg={error} type={error} />}
+        {!loading && <input type="submit" value="Cadastrar" />}
+        {loading && <input type="submit" value="Aguarde..." disabled />}
+        {error && <Message msg={error} type="error" />}
       </form>
       <p>
-        Já tem conta? <Link to="/login">Clique aqui</Link> para entrar!.
+        Já tem conta? <Link to="/login">Clique aqui</Link> para entrar!
       </p>
     </div>
   );
