@@ -36,23 +36,24 @@ const loginValidation = () => {
       .withMessage("O e-mail é obrigatório.")
       .isEmail()
       .withMessage("Insira um e-mail válido"),
-    body("password")
-      .isString()
-      .withMessage("A senha é obrigatória"),
-  ]
+    body("password").isString().withMessage("A senha é obrigatória"),
+  ];
 };
 
 const userUpdateValidation = () => {
   return [
     body("name")
       .optional()
-      .isLength({min: 3})
+      .isLength({ min: 3 })
       .withMessage("O nome precisa de pelo menos 3 caracteres!"),
     body("password")
       .optional()
-      .isLength({min: 5})
-      .withMessage("A senha precisa ter no minimo 5 caracteres!")
-  ]
+      .isLength({ min: 5 })
+      .withMessage("A senha precisa ter no minimo 5 caracteres!"),
+    body("confirmPassword").optional(),
+    body("bio").optional(),
+    body("imageProfile").optional(),
+  ];
 };
 
 module.exports = {

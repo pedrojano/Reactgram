@@ -6,8 +6,8 @@ const {register, login, getCurrentUser, update, getUserById, deleteUser, getAllU
 
 
 //Middlewares 
- const validate = require("../middlewares/handleValidation.js");
- const { userCreateValidation, loginValidation, userUpdateValidation } = require("../middlewares/userValidations.js");
+ const validate = require("../middlewares/handleValidation.js");
+ const { userCreateValidation, loginValidation, userUpdateValidation } = require("../middlewares/userValidations.js");
 const authGuard = require("../middlewares/authGuard.js");
 const { imageUpload } = require("../middlewares/imageUpload.js");
 
@@ -16,9 +16,8 @@ router.post("/register", userCreateValidation(), validate, register);
 router.post("/login", loginValidation(), validate, login);
 router.get("/profile", authGuard, getCurrentUser);
 router.put("/", authGuard, imageUpload.single("profileImage"), userUpdateValidation(), validate, update);
-router.get("/:id", getUserById);
 router.delete("/:id", authGuard, deleteUser);
 router.get("/", authGuard, getAllUsers);
+router.get("/:id", getUserById);
 
 module.exports = router;
-

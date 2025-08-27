@@ -1,46 +1,57 @@
-import { api , requestConfig } from "../utils/config";
+import { api, requestConfig } from "../utils/config";
 
-// Register an user
-const register = async(data) => {
+// Registrar um usuário
+const register = async (data) => {
     const config = requestConfig("POST", data);
 
     try {
-        const res =  await fetch(api + "/users/register", config)
-            .then((res) => res.json())
-            .catch((err) => err)
-
-        if(res){
-            localStorage.setItem("users", JSON.stringify(res));
+        const res = await fetch(api + "/users/register", config);
+        
+        // Verifica se a resposta foi um erro do servidor
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.errors ? errorData.errors[0] : "Ocorreu um erro desconhecido.");
         }
         
-        return res;
+        const resData = await res.json();
+        
+        // Se a resposta contiver um token, salva no localStorage.
+        if (resData.token) {
+            localStorage.setItem("user", JSON.stringify(resData)); // Chave 'user' no singular
+        }
+
+        return resData;
     } catch (error) {
-        console.log(error);
+        return { errors: [error.message] };
     }
 };
 
-// Logout an user
+// Fazer logout
 const logout = () => {
     localStorage.removeItem("user");
 };
 
-// Sign in an user
-const login = async(data) => {
+// Fazer login
+const login = async (data) => {
     const config = requestConfig("POST", data);
 
     try {
-        const res = await fetch(api + "/users/login", config)
-                    .then((res) => res.json())
-                    .catch((err) => err)
+        const res = await fetch(api + "/users/login", config);
 
-        if(res._id){
-            localStorage.setItem("user", JSON.stringify(res));
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.errors ? errorData.errors[0] : "Ocorreu um erro desconhecido.");
+        }
+        
+        const resData = await res.json();
+        
+        if (resData.token) {
+            localStorage.setItem("user", JSON.stringify(resData)); // Chave 'user' no singular
         }
 
-        return res;
-        
+        return resData;
     } catch (error) {
-        console.log(error)
+        return { errors: [error.message] };
     }
 };
 
@@ -48,6 +59,6 @@ const authServices = {
     register,
     logout,
     login,
-}
+};
 
 export default authServices;

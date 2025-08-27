@@ -12,7 +12,7 @@ import { updateProfile } from "../../slices/userSlice";
 const EditProfile = () => {
   const dispatch = useDispatch();
 
-  const { user, error, success, loading, message } = useSelector(
+  const { user, error, loading, message } = useSelector(
     (state) => state.user
   );
 
@@ -41,41 +41,32 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Gather user data from states
-    const userData = {
-      name,
-      bio,
-      password
-    };
-
-    // build form data
     const formData = new FormData();
 
-     if (profileImage) {
-      userData.profileImage = profileImage;
+    if (name) {
+        formData.append("name", name);
     }
 
     if (bio) {
-      userData.bio = bio;
+        formData.append("bio", bio);
     }
-
+    
     if (password) {
-      userData.password = password;
+        formData.append("password", password);
     }
 
-    const userFormData = Object.keys(userData).forEach((key) =>
-      formData.append(key, userData[key])
-    );
+    if (profileImage) {
+        formData.append("profileImage", profileImage);
+    }
 
-    formData.append("user", userFormData)
-
-    await dispatch(updateProfile(userFormData));
+    await dispatch(updateProfile(formData));
 
     setTimeout(() => {
-      dispatch(resetMessage());
+        dispatch(resetMessage());
     }, 2000);
-  };
+};
 
+  
   const handleFile = (e) => {
     // image preview
     const image = e.target.files[0];
