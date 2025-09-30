@@ -14,17 +14,31 @@ const initialState = {
 // Publish a photo
 export const publishPhoto = createAsyncThunk(
     "photo/publish",
-    async(photo, tunkAPI) => {
-        const token = tunkAPI.getState().auth.user.token;
+    async(photo, thunkAPI) => {
+        const token = thunkAPI.getState().auth.user.token;
         const data = await photoService.publishPhoto(photo, token);
 
         if(data.errors) {
-            return tunkAPI.rejectWithValue(data.errors[0]);
+            return thunkAPI.rejectWithValue(data.errors[0]);
         }
         return data;
     }
 );
 
+// get user photos
+export const getUserPhotos = createAsyncThunk(
+    "photo/userphotos",
+    async(id, thunkAPI) => {
+        const token = thunkAPI.getState().auth.user.token;
+
+        const data = await photoService.getUserPhotos(id, token);
+
+        return data;
+        
+    }
+)
+
+// function 
 export const photoSlice = createSlice({
     name: "photo",
     initialState,
@@ -42,6 +56,7 @@ export const photoSlice = createSlice({
         .addCase(publishPhoto.fulfilled, (state, action) => {
             state.loading = false;
             state.success = true;
+            state.error = null;
             state.photo = action.payload;
             state.photos.unshift(state.photo);
             state.message = "Foto publicada com sucesso!";
@@ -50,9 +65,18 @@ export const photoSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
             state.photo = {};
-            state.message = "Erro ao publicar foto!";
+        })
+        .addCase(getUserPhotos.pending, (state)=> {
+            state.loading = true;
+            state.error = false;
+        })
+        .addCase(getUserPhotos.fulfilled, (state, action) => {
+            state.loading = false;
+            state.success = true;
+            state.error = null;
+            state.photos = action.payload;
         });
-  }
+  },
 });
 
 export const {resetMessage} = photoSlice.actions;

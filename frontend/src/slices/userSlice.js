@@ -88,7 +88,7 @@ export const userSlice = createSlice({
         state.user = {};
       })
       // GetUserDetails
-      .addCase(getUserDetails.pending, (state, acion) => {
+      .addCase(getUserDetails.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
@@ -97,6 +97,7 @@ export const userSlice = createSlice({
         state.success = true;
         state.error = null;
         state.user = action.payload;
+        
       });
   },
 });
