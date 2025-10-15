@@ -10,7 +10,7 @@ import {
 } from "react-icons/bs"; //Icons
 
 // Hooks
-// import { useState } from "react";
+import { useState } from "react";
 import { useAth } from "../../hooks/useAth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,9 @@ import { logout, reset } from "../../slices/authSlice";
 const Navbar = () => {
   const { auth } = useAth();
   const { user } = useSelector((state) => state.auth);
+
+  const [query, setQuery] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -31,12 +34,26 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    
+    if (query) {
+      return navigate(`/search?q=${query}`);
+    } 
+
+
+  };
+
   return (
     <nav id="Nav">
       <Link to="/">Reactgram</Link>
-      <form id="search-form">
+      <form id="search-form" onSubmit={handleSearch}>
         <BsSearch />
-        <input type="text" placeholder="Pesquisar..." />
+        <input
+          type="text"
+          placeholder="Pesquisar..."
+          onChange={(e) => setQuery(e.target.value)}
+        />
       </form>
       <ul id="nav-links">
         {auth ? (

@@ -15,8 +15,7 @@ import { useParams } from "react-router-dom";
 import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
 
 // Redux
-import { getPhoto, like, resetMessage } from "../../slices/photoSlice";
-
+import { getPhoto, like, comment } from "../../slices/photoSlice";
 
 const Photo = () => {
   const { id } = useParams();
@@ -30,21 +29,37 @@ const Photo = () => {
     (state) => state.photo
   );
 
-  // Comentarios
+  const [commentText, setCommentText] = useState("");
 
   // Load photo data
   useEffect(() => {
     dispatch(getPhoto(id));
   }, [dispatch, id]);
 
-  // Like
+  //  insert a Like
   const handleLike = () => {
     dispatch(like(photo._id));
 
     resetMessage();
-  }; 
-  
-  // coments
+  };
+
+  // Insert a comments
+  const handleComment = (e) => {
+    e.preventDefault();
+
+    const commentData = {
+      comment: commentText,
+      id: photo._id,
+    };
+
+    if (!commentText) {
+      return;
+    }
+
+    dispatch(comment(commentData));
+    setCommentText("");
+    resetMessage();
+  };
 
   if (loading) {
     return <p>Caregando...</p>;
@@ -57,6 +72,39 @@ const Photo = () => {
       <div className="message-cotainer">
         {error && <Message msg={error} type="error" />}
         {message && <Message msg={message} type="success" />}
+      </div>
+      <div className="comments">
+        {photo.comments && (
+          <>
+            <h3>Comentários: ({photo.comments.length})</h3>
+            <form onSubmit={handleComment}>
+              <input
+                type="text"
+                placeholder="Insira seu comentário..."
+                onChange={(e) => setCommentText(e.target.value)}
+                value={commentText || ""}
+              />
+              <input type="submit" value="Enviar" />
+            </form>
+            {photo.comments.length === 0 && <p>Não há comentérios...</p>}
+            {photo.comments.map((comment) => (
+              <div className="comment" key={comment.comment}>
+                <div className="author">
+                    {comment.userImage && (
+                      <img
+                        src={`${uploads}/users/${comment.userImage}`}
+                        alt={comment.userName}
+                      />
+                    )}
+                     <Link to={`/users/${comment.userId}`}>
+                    <p>{comment.userName}</p>
+                  </Link>
+                </div>
+                <p>{comment.comment}</p>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

@@ -157,7 +157,7 @@ const likePhoto = async (req, res) => {
 // Comments Functionaly
 const commentsPhoto = async (req, res) => {
   const { id } = req.params;
-  const { comments } = req.body;
+  const { comment } = req.body;
   const reqUser = req.user;
 
   const user = await User.findById(reqUser._id);
@@ -171,7 +171,7 @@ const commentsPhoto = async (req, res) => {
 
   // Put comment in the array comments
   const userComments = {
-    comments,
+    comment,
     userName: user.name,
     userImage: user.profileImage,
     userId: user._id,
@@ -188,15 +188,17 @@ const commentsPhoto = async (req, res) => {
 
 // Search Photos by title
 const searchPhotos = async (req, res) => {
-  const { q } = req.query;
+    const { q } = req.query;
 
-  const photos = await Photo.find({ title: new RegExp(q, "i") }).exec();
+    const photos = await Photo.find({ title: new RegExp(q, "i") }).exec();
 
-  // Check if photos were found
-  if (photos.length === 0) {
-    return res.status(200).json({ mensage: ["Nenhuma foto entrada!"] });
-  }
-  res.status(200).json(photos);
+    if (photos.length === 0) {
+      
+        return res.status(200).json([]);
+    }
+    
+   
+    return res.status(200).json(photos);
 };
 
 module.exports = {

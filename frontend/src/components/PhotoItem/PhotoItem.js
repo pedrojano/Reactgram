@@ -11,7 +11,7 @@ const PhotoItem = ({ photo}) => {
     )}
     <h2>{photo.title}</h2>
     <p className="authorItem">
-        Postada por: &nbsp; <Link to={`/users/${photo.userId}`}>
+        Postada por:&nbsp; <Link to={`/users/${photo.userId}`}>
         {photo.userName}</Link>
         
     </p>
