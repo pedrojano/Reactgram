@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "back-end": "back-end/app.js",
+            "use": "@versel/node"
+        }
+    ],
+    "routes": [
+        {
+            "back-end": "(.*)",
+            "dest": "back-end/app.js"
+        }
+    ]
+}
