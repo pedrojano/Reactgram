@@ -1,5 +1,16 @@
-export const api = process.env.REACT_APP_API || "/api";
-export const uploads = "http://localhost:5000/uploads";
+// export const api = process.env.REACT_APP_API || "/api";
+// export const uploads = "http://localhost:5000/uploads";
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+export const api = isDevelopment 
+    ? "http://localhost:5000/api"  
+    : "/api";                      
+
+export const uploads = isDevelopment 
+    ? "http://localhost:5000/uploads" 
+    : "/uploads";
+
 
 export const requestConfig = (method, data, token = null, image = null) => {
   let config;
